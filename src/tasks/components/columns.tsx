@@ -15,8 +15,9 @@ import {
 
 import { Checkbox } from "@/components/ui/checkbox"
 import { deleteTask } from "../controllers/deleteTask"
+import { useNavigate } from "react-router"
 
-export type Task = {
+export interface Task {
     id: string
     title: string
     description: string
@@ -51,8 +52,10 @@ export const columns: ColumnDef<Task>[] = [
     {
         id: "actions",
         cell: ({ row }) => {
-            const task = row.original
-
+            const task = row.original;
+            const onSelectTask = (navigate: ReturnType<typeof useNavigate>) => {
+                navigate(`/tasks/${task.id}`);
+            };
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -66,12 +69,15 @@ export const columns: ColumnDef<Task>[] = [
                         <DropdownMenuItem
                             onClick={() => navigator.clipboard.writeText(task.id)}
                         >
-                            Copy payment ID
+                            Copiar ID de Tarea
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Editar Tarea</DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={onSelectTask.bind(null, useNavigate())}
+                        >
+                            Editar Tarea</DropdownMenuItem>
                         <DropdownMenuItem>Visualizar Tarea</DropdownMenuItem>
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                             className="text-red-500"
                             onClick={() => {
                                 // Call your delete function here
